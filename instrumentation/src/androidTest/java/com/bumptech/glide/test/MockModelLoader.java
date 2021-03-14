@@ -12,6 +12,7 @@ import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 import com.bumptech.glide.signature.ObjectKey;
+import test.L;
 
 public final class MockModelLoader<ModelT, DataT> implements ModelLoader<ModelT, DataT> {
   private final ModelT model;
@@ -68,6 +69,7 @@ public final class MockModelLoader<ModelT, DataT> implements ModelLoader<ModelT,
     @Override
     public void loadData(
         @NonNull Priority priority, @NonNull DataCallback<? super DataT> callback) {
+      L.m3();
       callback.onDataReady(data);
     }
 

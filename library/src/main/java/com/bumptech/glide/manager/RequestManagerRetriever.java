@@ -28,6 +28,7 @@ import com.bumptech.glide.util.Util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import test.L;
 
 /**
  * A collection of static methods for creating new {@link com.bumptech.glide.RequestManager}s or
@@ -147,6 +148,7 @@ public class RequestManagerRetriever implements Handler.Callback {
   @SuppressWarnings("deprecation")
   @NonNull
   public RequestManager get(@NonNull Activity activity) {
+    L.m3();
     if (Util.isOnBackgroundThread()) {
       return get(activity.getApplicationContext());
     } else {

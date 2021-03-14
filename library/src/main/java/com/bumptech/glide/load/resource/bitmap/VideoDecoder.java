@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.Target;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
+import test.L;
 
 /**
  * Decodes video data to Bitmaps from {@link ParcelFileDescriptor}s and {@link
@@ -153,6 +154,7 @@ public class VideoDecoder<T> implements ResourceDecoder<T, Bitmap> {
   public Resource<Bitmap> decode(
       @NonNull T resource, int outWidth, int outHeight, @NonNull Options options)
       throws IOException {
+    L.m3();
     long frameTimeMicros = options.get(TARGET_FRAME);
     if (frameTimeMicros < 0 && frameTimeMicros != DEFAULT_FRAME) {
       throw new IllegalArgumentException(

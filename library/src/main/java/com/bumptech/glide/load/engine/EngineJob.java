@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
+import test.L;
 
 /**
  * A class that manages a load by adding and removing callbacks for for the load and notifying
@@ -126,8 +127,11 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
 
   public synchronized void start(DecodeJob<R> decodeJob) {
     this.decodeJob = decodeJob;
+    L.m3("willDecodeFromCache");
     GlideExecutor executor =
         decodeJob.willDecodeFromCache() ? diskCacheExecutor : getActiveSourceExecutor();
+    // 开始执行
+    L.m3("executor.execute(decodeJob)");
     executor.execute(decodeJob);
   }
 
@@ -155,7 +159,7 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
       // This is overly broad, some Glide code is actually called here, but it's much
       // simpler to encapsulate here than to do so at the actual call point in the
       // Request implementation.
-      cb.onResourceReady(engineResource, dataSource);
+      cb.onResourceReady(engineResource, dataSource);//回调给 SingleRequest
     } catch (Throwable t) {
       throw new CallbackException(t);
     }
@@ -226,6 +230,7 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
   })
   @Synthetic
   void notifyCallbacksOfResult() {
+    L.m3();
     ResourceCallbacksAndExecutors copy;
     Key localKey;
     EngineResource<?> localResource;
@@ -254,9 +259,9 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
       localKey = key;
       localResource = engineResource;
     }
-
+//回调上层 Engine 任务完成了
     engineJobListener.onEngineJobComplete(this, localKey, localResource);
-
+//遍历资源回调给 ImageViewTarget
     for (final ResourceCallbackAndExecutor entry : copy) {
       entry.executor.execute(new CallResourceReady(entry.cb));
     }
@@ -313,6 +318,7 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
 
   @Override
   public void onResourceReady(Resource<R> resource, DataSource dataSource) {
+    L.m3();
     synchronized (this) {
       this.resource = resource;
       this.dataSource = dataSource;
@@ -421,6 +427,7 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
           if (cbs.contains(cb)) {
             // Acquire for this particular callback.
             engineResource.acquire();
+            //返回准备好的资源
             callCallbackOnResourceReady(cb);
             removeCallback(cb);
           }

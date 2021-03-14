@@ -9,6 +9,7 @@ import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.transition.Transition;
 import java.util.Arrays;
+import test.L;
 
 /**
  * A {@link com.bumptech.glide.ListPreloader.PreloadSizeProvider} that will extract the preload size
@@ -93,6 +94,7 @@ public class ViewPreloadSizeProvider<T>
 
     @Override
     public void onResourceReady(
-        @NonNull Object resource, @Nullable Transition<? super Object> transition) {}
+        @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+      L.m3();}
   }
 }

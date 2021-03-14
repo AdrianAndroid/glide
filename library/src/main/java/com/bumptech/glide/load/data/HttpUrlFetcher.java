@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
+import test.L;
 
 /** A DataFetcher that retrieves an {@link java.io.InputStream} for a Url. */
 public class HttpUrlFetcher implements DataFetcher<InputStream> {
@@ -51,14 +52,18 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
   @Override
   public void loadData(
       @NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
+    L.m3();
     long startTime = LogTime.getLogTime();
     try {
+      //http请求， 返回一个InputStream输入流
       InputStream result = loadDataWithRedirects(glideUrl.toURL(), 0, null, glideUrl.getHeaders());
+      L.m3("callback.onDataReady(result)");
       callback.onDataReady(result);
     } catch (IOException e) {
       if (Log.isLoggable(TAG, Log.DEBUG)) {
         Log.d(TAG, "Failed to load data for url", e);
       }
+      // 将InputStream以回调形式回调出去
       callback.onLoadFailed(e);
     } finally {
       if (Log.isLoggable(TAG, Log.VERBOSE)) {
@@ -69,6 +74,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
 
   private InputStream loadDataWithRedirects(
       URL url, int redirects, URL lastUrl, Map<String, String> headers) throws IOException {
+    L.m3();
     if (redirects >= MAXIMUM_REDIRECTS) {
       throw new HttpException("Too many (> " + MAXIMUM_REDIRECTS + ") redirects!");
     } else {
@@ -97,6 +103,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
     urlConnection.setInstanceFollowRedirects(false);
 
     // Connect explicitly to avoid errors in decoders if connection fails.
+    L.m3("urlConnection.connect()");
     urlConnection.connect();
     // Set the stream so that it's closed in cleanup to avoid resource leaks. See #2352.
     stream = urlConnection.getInputStream();
@@ -135,6 +142,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
 
   private InputStream getStreamForSuccessfulRequest(HttpURLConnection urlConnection)
       throws IOException {
+    L.m3();
     if (TextUtils.isEmpty(urlConnection.getContentEncoding())) {
       int contentLength = urlConnection.getContentLength();
       stream = ContentLengthInputStream.obtain(urlConnection.getInputStream(), contentLength);

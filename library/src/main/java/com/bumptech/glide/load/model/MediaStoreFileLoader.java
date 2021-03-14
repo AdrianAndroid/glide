@@ -14,6 +14,7 @@ import com.bumptech.glide.load.data.mediastore.MediaStoreUtil;
 import com.bumptech.glide.signature.ObjectKey;
 import java.io.File;
 import java.io.FileNotFoundException;
+import test.L;
 
 /** Loads the file path for {@link MediaStore} owned {@link Uri uris}. */
 public final class MediaStoreFileLoader implements ModelLoader<Uri, File> {
@@ -53,6 +54,7 @@ public final class MediaStoreFileLoader implements ModelLoader<Uri, File> {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super File> callback) {
+      L.m3();
       Cursor cursor =
           context
               .getContentResolver()

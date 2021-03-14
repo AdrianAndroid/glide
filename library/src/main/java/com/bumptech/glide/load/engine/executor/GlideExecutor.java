@@ -20,6 +20,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import test.L;
 
 /** A prioritized {@link ThreadPoolExecutor} for running jobs in Glide. */
 public final class GlideExecutor implements ExecutorService {
@@ -217,6 +218,7 @@ public final class GlideExecutor implements ExecutorService {
 
   @Override
   public void execute(@NonNull Runnable command) {
+    L.m3("delegate.execute", command);
     delegate.execute(command);
   }
 

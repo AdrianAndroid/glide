@@ -48,6 +48,7 @@ import org.robolectric.annotation.Implements;
 import org.robolectric.annotation.RealObject;
 import org.robolectric.shadow.api.Shadow;
 import org.robolectric.shadows.ShadowView;
+import test.L;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(
@@ -749,7 +750,8 @@ public class ViewTargetTest {
 
     @Override
     public void onResourceReady(
-        @NonNull Object resource, @Nullable Transition<? super Object> transition) {}
+        @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+      L.m3();}
   }
 
   private static final class TestViewTarget extends ViewTarget<View, Object> {
@@ -763,6 +765,7 @@ public class ViewTargetTest {
     @Override
     public void onResourceReady(
         @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+      L.m3();
       // Avoid calling super.
     }
 

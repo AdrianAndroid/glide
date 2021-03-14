@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.util.Synthetic;
+import test.L;
 
 /**
  * A one time use {@link com.bumptech.glide.request.target.Target} class that loads a resource into
@@ -53,6 +54,7 @@ public final class PreloadTarget<Z> extends CustomTarget<Z> {
 
   @Override
   public void onResourceReady(@NonNull Z resource, @Nullable Transition<? super Z> transition) {
+    L.m3();
     HANDLER.obtainMessage(MESSAGE_CLEAR, this).sendToTarget();
   }
 

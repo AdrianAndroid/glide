@@ -11,6 +11,7 @@ import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.Resource;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import test.L;
 
 /**
  * {@link ByteBuffer} specific implementation of {@link
@@ -31,6 +32,7 @@ public final class ByteBufferBitmapImageDecoderResourceDecoder
   public Resource<Bitmap> decode(
       @NonNull ByteBuffer buffer, int width, int height, @NonNull Options options)
       throws IOException {
+    L.m3();
     Source source = ImageDecoder.createSource(buffer);
     return wrapped.decode(source, width, height, options);
   }

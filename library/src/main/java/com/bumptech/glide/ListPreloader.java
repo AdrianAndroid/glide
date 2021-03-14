@@ -12,6 +12,7 @@ import com.bumptech.glide.util.Synthetic;
 import com.bumptech.glide.util.Util;
 import java.util.List;
 import java.util.Queue;
+import test.L;
 
 /**
  * Loads a few resources ahead in the direction of scrolling in any {@link AbsListView} so that
@@ -267,6 +268,7 @@ public class ListPreloader<T> implements AbsListView.OnScrollListener {
     @Override
     public void onResourceReady(
         @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+      L.m3();
       // Do nothing.
     }
 

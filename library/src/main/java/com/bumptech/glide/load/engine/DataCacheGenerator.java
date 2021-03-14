@@ -8,6 +8,7 @@ import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoader.LoadData;
 import java.io.File;
 import java.util.List;
+import test.L;
 
 /**
  * Generates {@link com.bumptech.glide.load.data.DataFetcher DataFetchers} from cache files
@@ -43,6 +44,7 @@ class DataCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCallba
 
   @Override
   public boolean startNext() {
+    L.m3();
     while (modelLoaders == null || !hasNextModelLoader()) {
       sourceIdIndex++;
       if (sourceIdIndex >= cacheKeys.size()) {
@@ -71,6 +73,8 @@ class DataCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCallba
               cacheFile, helper.getWidth(), helper.getHeight(), helper.getOptions());
       if (loadData != null && helper.hasLoadPath(loadData.fetcher.getDataClass())) {
         started = true;
+        // 通过拿到的加载器，开始加载数据
+        L.m3("loadData.fetcher.loadData");
         loadData.fetcher.loadData(helper.getPriority(), this);
       }
     }
@@ -91,11 +95,17 @@ class DataCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCallba
 
   @Override
   public void onDataReady(Object data) {
+    L.m3();
     cb.onDataFetcherReady(sourceKey, data, loadData.fetcher, DataSource.DATA_DISK_CACHE, sourceKey);
   }
 
   @Override
   public void onLoadFailed(@NonNull Exception e) {
     cb.onDataFetcherFailed(sourceKey, e, loadData.fetcher, DataSource.DATA_DISK_CACHE);
+  }
+
+  @Override
+  public String toString() {
+    return "DataCacheGenerator{}";
   }
 }

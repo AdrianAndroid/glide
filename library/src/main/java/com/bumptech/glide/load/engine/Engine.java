@@ -24,6 +24,7 @@ import com.bumptech.glide.util.Synthetic;
 import com.bumptech.glide.util.pool.FactoryPools;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import test.L;
 
 /** Responsible for starting loads and managing active and cached resources. */
 public class Engine
@@ -173,7 +174,8 @@ public class Engine
       ResourceCallback cb,
       Executor callbackExecutor) {
     long startTime = VERBOSE_IS_LOGGABLE ? LogTime.getLogTime() : 0;
-
+    L.m3();
+    //拿到缓存或者请求的key
     EngineKey key =
         keyFactory.buildKey(
             model,
@@ -184,7 +186,7 @@ public class Engine
             resourceClass,
             transcodeClass,
             options);
-
+    // 根据key拿到活动缓存中的资源
     EngineResource<?> memoryResource;
     synchronized (this) {
       memoryResource = loadFromMemory(key, isMemoryCacheable, startTime);
@@ -243,16 +245,19 @@ public class Engine
       Executor callbackExecutor,
       EngineKey key,
       long startTime) {
-
+    L.m3("jobs.get");
+    // 根据key看看缓存中否正在执行
     EngineJob<?> current = jobs.get(key, onlyRetrieveFromCache);
     if (current != null) {
+      // 如果正在执行，把数据回调出去
       current.addCallback(cb, callbackExecutor);
       if (VERBOSE_IS_LOGGABLE) {
         logWithTimeAndKey("Added to existing load", startTime, key);
       }
       return new LoadStatus(cb, current);
     }
-
+    //走到这里说明是一个新的任务
+    // 构建新的请求任务
     EngineJob<R> engineJob =
         engineJobFactory.build(
             key,
@@ -279,10 +284,12 @@ public class Engine
             onlyRetrieveFromCache,
             options,
             engineJob);
-
+    // 把当前需要执行的key添加进缓存
     jobs.put(key, engineJob);
-
+    // 执行任务的回调
     engineJob.addCallback(cb, callbackExecutor);
+    // 开始执行
+    L.m3("engineJob.start(");
     engineJob.start(decodeJob);
 
     if (VERBOSE_IS_LOGGABLE) {
@@ -294,18 +301,20 @@ public class Engine
   @Nullable
   private EngineResource<?> loadFromMemory(
       EngineKey key, boolean isMemoryCacheable, long startTime) {
+    L.m3();
     if (!isMemoryCacheable) {
       return null;
     }
-
+    // 根据key拿到活动缓存中的资源
     EngineResource<?> active = loadFromActiveResources(key);
+    // 如果ActivityResources活动缓存中有就回调出去
     if (active != null) {
       if (VERBOSE_IS_LOGGABLE) {
         logWithTimeAndKey("Loaded resource from active resources", startTime, key);
       }
       return active;
     }
-
+    //尝试从LruResourcesCache中找寻这个资源
     EngineResource<?> cached = loadFromCache(key);
     if (cached != null) {
       if (VERBOSE_IS_LOGGABLE) {
@@ -323,6 +332,7 @@ public class Engine
 
   @Nullable
   private EngineResource<?> loadFromActiveResources(Key key) {
+    L.m3();
     EngineResource<?> active = activeResources.get(key);
     if (active != null) {
       active.acquire();
@@ -332,6 +342,7 @@ public class Engine
   }
 
   private EngineResource<?> loadFromCache(Key key) {
+    L.m3();
     EngineResource<?> cached = getEngineResourceFromCache(key);
     if (cached != null) {
       cached.acquire();
@@ -370,8 +381,8 @@ public class Engine
   public synchronized void onEngineJobComplete(
       EngineJob<?> engineJob, Key key, EngineResource<?> resource) {
     // A null resource indicates that the load failed, usually due to an exception.
-    if (resource != null && resource.isMemoryCacheable()) {
-      activeResources.activate(key, resource);
+    if (resource != null && resource.isMemoryCacheable()) {//收到下游返回回来的资源，添加到活动缓存中
+      activeResources.activate(key, resource); //添加到活动缓存中
     }
 
     jobs.removeIfCurrent(key, engineJob);

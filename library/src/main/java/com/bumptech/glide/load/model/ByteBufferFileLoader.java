@@ -12,6 +12,7 @@ import com.bumptech.glide.util.Synthetic;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import test.L;
 
 /** Loads {@link java.nio.ByteBuffer}s using NIO for {@link java.io.File}. */
 public class ByteBufferFileLoader implements ModelLoader<File, ByteBuffer> {
@@ -56,6 +57,7 @@ public class ByteBufferFileLoader implements ModelLoader<File, ByteBuffer> {
     @Override
     public void loadData(
         @NonNull Priority priority, @NonNull DataCallback<? super ByteBuffer> callback) {
+      L.m3();
       ByteBuffer result;
       try {
         result = ByteBufferUtil.fromFile(file);

@@ -47,6 +47,7 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.TextLayoutMode;
 import org.robolectric.util.ReflectionHelpers;
+import test.L;
 
 /**
  * Test for {@link CustomViewTarget}.
@@ -658,6 +659,7 @@ public class CustomViewTargetTest {
     @Override
     public void onResourceReady(
         @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+      L.m3();
       // Intentionally Empty.
     }
   }
@@ -678,6 +680,7 @@ public class CustomViewTargetTest {
     @Override
     public void onResourceReady(
         @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+      L.m3();
       // Avoid calling super.
     }
 

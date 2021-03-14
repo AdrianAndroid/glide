@@ -24,6 +24,7 @@ import com.bumptech.glide.util.Util;
 import com.bumptech.glide.util.pool.StateVerifier;
 import java.util.List;
 import java.util.concurrent.Executor;
+import test.L;
 
 /**
  * A {@link Request} that loads a {@link com.bumptech.glide.load.engine.Resource} into a given
@@ -210,17 +211,20 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
 
   @Override
   public void begin() {
+    L.m3();
     synchronized (requestLock) {
       assertNotCallingCallbacks();
       stateVerifier.throwIfRecycled();
       startTime = LogTime.getLogTime();
       if (model == null) {
+        // 检查外部调用的尺寸是否有效
         if (Util.isValidDimensions(overrideWidth, overrideHeight)) {
           width = overrideWidth;
           height = overrideHeight;
         }
         // Only log at more verbose log levels if the user has set a fallback drawable, because
         // fallback Drawables indicate the user expects null models occasionally.
+        // 失败的回调
         int logLevel = getFallbackDrawable() == null ? Log.WARN : Log.DEBUG;
         onLoadFailed(new GlideException("Received null model"), logLevel);
         return;
@@ -237,6 +241,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
       // that the view size has changed will need to explicitly clear the View or Target before
       // starting the new load.
       if (status == Status.COMPLETE) {
+        // 表示资源准备好了
         onResourceReady(resource, DataSource.MEMORY_CACHE);
         return;
       }
@@ -245,12 +250,14 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
       // and can run again from the beginning.
 
       status = Status.WAITING_FOR_SIZE;
+      // 这里表示大小已经准备好了
       if (Util.isValidDimensions(overrideWidth, overrideHeight)) {
+        // 开始
         onSizeReady(overrideWidth, overrideHeight);
       } else {
         target.getSize(this);
       }
-
+      // 这里是刚刚开始执行的回调，相当于显示开始的进度
       if ((status == Status.RUNNING || status == Status.WAITING_FOR_SIZE)
           && canNotifyStatusChanged()) {
         target.onLoadStarted(getPlaceholderDrawable());
@@ -271,6 +278,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
    */
   @GuardedBy("requestLock")
   private void cancel() {
+    L.m3();
     assertNotCallingCallbacks();
     stateVerifier.throwIfRecycled();
     target.removeCallback(this);
@@ -302,6 +310,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
    */
   @Override
   public void clear() {
+    L.m3();
     Resource<R> toRelease = null;
     synchronized (requestLock) {
       assertNotCallingCallbacks();
@@ -428,6 +437,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
   /** A callback method that should never be invoked directly. */
   @Override
   public void onSizeReady(int width, int height) {
+    L.m3();
     stateVerifier.throwIfRecycled();
     synchronized (requestLock) {
       if (IS_VERBOSE_LOGGABLE) {
@@ -445,8 +455,9 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
       if (IS_VERBOSE_LOGGABLE) {
         logV("finished setup for calling load in " + LogTime.getElapsedMillis(startTime));
       }
+      L.m3("engine.load(");
       loadStatus =
-          engine.load(
+          engine.load( //加载
               glideContext,
               model,
               requestOptions.getSignature(),
@@ -521,6 +532,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
   @SuppressWarnings("unchecked")
   @Override
   public void onResourceReady(Resource<?> resource, DataSource dataSource) {
+    L.m3();
     stateVerifier.throwIfRecycled();
     Resource<?> toRelease = null;
     try {
@@ -571,7 +583,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
           status = Status.COMPLETE;
           return;
         }
-
+        // 当资源准备好的时候
         onResourceReady((Resource<R>) resource, (R) received, dataSource);
       }
     } finally {
@@ -590,6 +602,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
    */
   @GuardedBy("requestLock")
   private void onResourceReady(Resource<R> resource, R result, DataSource dataSource) {
+    L.m3();
     // We must call isFirstReadyResource before setting status.
     boolean isFirstResource = isFirstReadyResource();
     status = Status.COMPLETE;
@@ -628,12 +641,12 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
 
       if (!anyListenerHandledUpdatingTarget) {
         Transition<? super R> animation = animationFactory.build(dataSource, isFirstResource);
-        target.onResourceReady(result, animation);
+        target.onResourceReady(result, animation);//回调给目标 ImageViewTarget 资源准备好了
       }
     } finally {
       isCallingCallbacks = false;
     }
-
+//加载成功
     notifyLoadSuccess();
   }
 

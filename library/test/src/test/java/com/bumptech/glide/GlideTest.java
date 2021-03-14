@@ -87,6 +87,7 @@ import org.robolectric.annotation.Implements;
 import org.robolectric.annotation.Resetter;
 import org.robolectric.shadow.api.Shadow;
 import org.robolectric.shadows.ShadowBitmap;
+import test.L;
 
 /** Tests for the {@link Glide} interface and singleton. */
 @RunWith(RobolectricTestRunner.class)
@@ -679,6 +680,7 @@ public class GlideTest {
                   public void onResourceReady(
                       @NonNull Drawable resource,
                       @Nullable Transition<? super Drawable> transition) {
+                    L.m3();
                     // Do nothing.
                   }
 

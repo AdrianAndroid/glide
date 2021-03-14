@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import java.io.IOException;
+import test.L;
 
 /**
  * An abstract class for obtaining data for an asset path using an {@link
@@ -28,6 +29,7 @@ public abstract class AssetPathFetcher<T> implements DataFetcher<T> {
 
   @Override
   public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super T> callback) {
+    L.m3();
     try {
       data = loadResource(assetManager, assetPath);
     } catch (IOException e) {

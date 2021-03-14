@@ -11,6 +11,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPoolAdapter;
 import com.bumptech.glide.load.resource.ImageDecoderResourceDecoder;
 import java.io.IOException;
+import test.L;
 
 /** {@link Bitmap} specific implementation of {@link ImageDecoderResourceDecoder}. */
 @RequiresApi(api = 28)
@@ -25,6 +26,7 @@ public final class BitmapImageDecoderResourceDecoder extends ImageDecoderResourc
       int requestedResourceHeight,
       OnHeaderDecodedListener listener)
       throws IOException {
+    L.m3();
     Bitmap result = ImageDecoder.decodeBitmap(source, listener);
     if (Log.isLoggable(TAG, Log.VERBOSE)) {
       Log.v(

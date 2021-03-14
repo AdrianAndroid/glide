@@ -11,6 +11,7 @@ import com.bumptech.glide.util.Preconditions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import test.L;
 
 /**
  * Attempts to decode and transcode resource type from a given data type.
@@ -56,8 +57,12 @@ public class DecodePath<DataType, ResourceType, Transcode> {
       @NonNull Options options,
       DecodeCallback<ResourceType> callback)
       throws GlideException {
+    L.m3();
+    //调用 decodeResourec 将数据解析成中间资源
     Resource<ResourceType> decoded = decodeResource(rewinder, width, height, options);
+    //解析完数据回调出去
     Resource<ResourceType> transformed = callback.onResourceDecoded(decoded);
+    //转换资源为目标资源
     return transcoder.transcode(transformed, options);
   }
 
@@ -65,6 +70,7 @@ public class DecodePath<DataType, ResourceType, Transcode> {
   private Resource<ResourceType> decodeResource(
       DataRewinder<DataType> rewinder, int width, int height, @NonNull Options options)
       throws GlideException {
+    L.m3();
     List<Throwable> exceptions = Preconditions.checkNotNull(listPool.acquire());
     try {
       return decodeResourceWithList(rewinder, width, height, options, exceptions);
@@ -81,6 +87,7 @@ public class DecodePath<DataType, ResourceType, Transcode> {
       @NonNull Options options,
       List<Throwable> exceptions)
       throws GlideException {
+    L.m3();
     Resource<ResourceType> result = null;
     //noinspection ForLoopReplaceableByForEach to improve perf
     for (int i = 0, size = decoders.size(); i < size; i++) {
@@ -89,6 +96,7 @@ public class DecodePath<DataType, ResourceType, Transcode> {
         DataType data = rewinder.rewindAndGet();
         if (decoder.handles(data, options)) {
           data = rewinder.rewindAndGet();
+          // 解析数据
           result = decoder.decode(data, width, height, options);
         }
         // Some decoders throw unexpectedly. If they do, we shouldn't fail the entire load path, but

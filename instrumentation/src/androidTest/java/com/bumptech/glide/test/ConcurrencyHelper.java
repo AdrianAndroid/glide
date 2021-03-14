@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import test.L;
 
 /** Helper for running sections of code on the main thread in emulator tests. */
 public class ConcurrencyHelper {
@@ -124,6 +125,7 @@ public class ConcurrencyHelper {
                   @Override
                   public void onResourceReady(
                       @NonNull T resource, @Nullable Transition<? super T> transition) {
+                    L.m3();
                     target.onResourceReady(resource, transition);
                     latch.countDown();
                   }
@@ -197,6 +199,7 @@ public class ConcurrencyHelper {
                   @Override
                   public void onResourceReady(
                       @NonNull T resource, @Nullable Transition<? super T> transition) {
+                    L.m3();
                     target.onResourceReady(resource, transition);
                     checkRequestAndMaybeReleaseLatch();
                   }

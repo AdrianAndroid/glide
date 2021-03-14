@@ -11,6 +11,7 @@ import com.bumptech.glide.util.ExceptionCatchingInputStream;
 import com.bumptech.glide.util.MarkEnforcingInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import test.L;
 
 /**
  * Decodes {@link android.graphics.Bitmap Bitmaps} from {@link java.io.InputStream InputStreams}.
@@ -34,6 +35,7 @@ public class StreamBitmapDecoder implements ResourceDecoder<InputStream, Bitmap>
   public Resource<Bitmap> decode(
       @NonNull InputStream source, int width, int height, @NonNull Options options)
       throws IOException {
+    L.m3();
 
     // Use to fix the mark limit to avoid allocating buffers that fit entire images.
     final RecyclableBufferedInputStream bufferedStream;

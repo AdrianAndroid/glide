@@ -7,6 +7,7 @@ import androidx.annotation.VisibleForTesting;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import test.L;
 
 /** Generic {@link Executor} implementations. */
 public final class Executors {
@@ -20,6 +21,7 @@ public final class Executors {
 
         @Override
         public void execute(@NonNull Runnable command) {
+          L.m3();
           handler.post(command);
         }
       };
@@ -27,6 +29,7 @@ public final class Executors {
       new Executor() {
         @Override
         public void execute(@NonNull Runnable command) {
+          L.m3();
           command.run();
         }
       };

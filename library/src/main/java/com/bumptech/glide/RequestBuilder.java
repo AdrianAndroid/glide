@@ -40,6 +40,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import test.L;
 
 /**
  * A generic class that can handle setting options and staring loads for generic resource types.
@@ -67,7 +68,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
   @NonNull
   @SuppressWarnings("unchecked")
   private TransitionOptions<?, ? super TranscodeType> transitionOptions;
-
+  // 描述加载的数据源-这里可以看作时我们刚刚传递进来的http://xxx.png
   @Nullable private Object model;
   // model may occasionally be null, so to enforce that load() was called, put a boolean rather
   // than relying on model not to be null.
@@ -76,6 +77,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
   @Nullable private RequestBuilder<TranscodeType> errorBuilder;
   @Nullable private Float thumbSizeMultiplier;
   private boolean isDefaultTransitionOptionsSet = true;
+  //描述这个请求是否已经添加了加载的数据源
   private boolean isModelSet;
   private boolean isThumbnailBuilt;
 
@@ -596,6 +598,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
    */
   @NonNull
   public <Y extends Target<TranscodeType>> Y into(@NonNull Y target) {
+    L.m3();
     return into(target, /*targetListener=*/ null, Executors.mainThreadExecutor());
   }
 
@@ -605,6 +608,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       @NonNull Y target,
       @Nullable RequestListener<TranscodeType> targetListener,
       Executor callbackExecutor) {
+    L.m3();
     return into(target, targetListener, /*options=*/ this, callbackExecutor);
   }
 
@@ -613,14 +617,17 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       @Nullable RequestListener<TranscodeType> targetListener,
       BaseRequestOptions<?> options,
       Executor callbackExecutor) {
+    L.m3();
     Preconditions.checkNotNull(target);
+    //这里的isModelSet实在load的时候赋值为true的，所以不会抛异常
     if (!isModelSet) {
       throw new IllegalArgumentException("You must call #load() before calling #into()");
     }
-
+    // 为这个http://xx.png生成一个Glide request的请求
     Request request = buildRequest(target, targetListener, options, callbackExecutor);
-
+    // 相当于拿到上一个请求
     Request previous = target.getRequest();
+    // 下面的几行说明是否与上一个请求冲突，一般不用管 直接看下面else判断
     if (request.isEquivalentTo(previous)
         && !isSkipMemoryCacheWithCompletePreviousRequest(options, previous)) {
       // If the request is completed, beginning again will ensure the result is re-delivered,
@@ -635,9 +642,11 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       }
       return target;
     }
-
+  // 清理掉目标请求管理
     requestManager.clear(target);
+    //重新为目标设置一个glide request请求
     target.setRequest(request);
+    // 最后调用RequestManager的track来执行目标的glide request请求
     requestManager.track(target, request);
 
     return target;
@@ -667,7 +676,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
   public ViewTarget<ImageView, TranscodeType> into(@NonNull ImageView view) {
     Util.assertMainThread();
     Preconditions.checkNotNull(view);
-
+    // 根据ImageView布局中的scaleType来重构requestOptions
     BaseRequestOptions<?> requestOptions = this;
     if (!requestOptions.isTransformationSet()
         && requestOptions.isTransformationAllowed()
@@ -675,6 +684,8 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       // Clone in this method so that if we use this RequestBuilder to load into a View and then
       // into a different target, we don't retain the transformation applied based on the previous
       // View's scale type.
+      // 如果在xml ImageView节点中 没有设置scaleType那么默认在构造函数中进行了初始化
+      // mScaleType = ScaleType.FIT_CENTER;
       switch (view.getScaleType()) {
         case CENTER_CROP:
           requestOptions = requestOptions.clone().optionalCenterCrop();
@@ -685,6 +696,8 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
         case FIT_CENTER:
         case FIT_START:
         case FIT_END:
+          //这里用到了克隆（原型设计模式），选择一个居中合适显示的方案，同学们会发现
+          //到处都是设计模式，它不是为了装B哦
           requestOptions = requestOptions.clone().optionalFitCenter();
           break;
         case FIT_XY:
@@ -696,8 +709,9 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
           // Do nothing.
       }
     }
-
+    // 调用into重载函数吗，创建一个ViewTarget
     return into(
+        // 调用buildImageViewTarget构建一个ImageView类型的Target(Bitmap/Drawable)
         glideContext.buildImageViewTarget(view, transcodeClass),
         /*targetListener=*/ null,
         requestOptions,
@@ -847,6 +861,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       @Nullable RequestListener<TranscodeType> targetListener,
       BaseRequestOptions<?> requestOptions,
       Executor callbackExecutor) {
+    L.m3();
     return buildRequestRecursive(
         /*requestLock=*/ new Object(),
         target,
@@ -871,7 +886,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       int overrideHeight,
       BaseRequestOptions<?> requestOptions,
       Executor callbackExecutor) {
-
+    L.m3();
     // Build the ErrorRequestCoordinator first if necessary so we can update parentCoordinator.
     ErrorRequestCoordinator errorRequestCoordinator = null;
     if (errorBuilder != null) {
@@ -880,7 +895,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
     }
 
     Request mainRequest =
-        buildThumbnailRequestRecursive(
+        buildThumbnailRequestRecursive( //obtainRequest
             requestLock,
             target,
             targetListener,
@@ -1052,6 +1067,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       int overrideWidth,
       int overrideHeight,
       Executor callbackExecutor) {
+    L.m3("SingleRequest.obtain");
     return SingleRequest.obtain(
         context,
         glideContext,

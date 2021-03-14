@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import test.L;
 
 /** Tests for the {@link DataUrlLoader} class. */
 @RunWith(RobolectricTestRunner.class)
@@ -122,6 +123,7 @@ public class DataUrlLoaderTest {
 
     @Override
     public void onDataReady(@Nullable Object data) {
+      L.m3();
       this.data = data;
     }
 

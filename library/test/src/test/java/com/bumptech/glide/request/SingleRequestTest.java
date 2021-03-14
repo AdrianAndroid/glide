@@ -54,6 +54,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import test.L;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 18)
@@ -1113,6 +1114,7 @@ public class SingleRequestTest {
     @Override
     public void onResourceReady(
         @NonNull List resource, @Nullable Transition<? super List> transition) {
+      L.m3();
       currentPlaceholder = null;
     }
 

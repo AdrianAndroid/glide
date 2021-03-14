@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.util.Preconditions;
+import test.L;
 
 /**
  * This class is used in order to display downloaded Bitmap inside an ImageView of an AppWidget
@@ -128,6 +129,7 @@ public class AppWidgetTarget extends CustomTarget<Bitmap> {
   @Override
   public void onResourceReady(
       @NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+    L.m3();
     setBitmap(resource);
   }
 

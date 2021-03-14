@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import test.L;
 
 /**
  * A ModelLoader for {@link android.net.Uri}s that handles local {@link android.net.Uri}s directly
@@ -45,6 +46,7 @@ public class UriLoader<Data> implements ModelLoader<Uri, Data> {
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull Uri model, int width, int height, @NonNull Options options) {
+    L.m3();
     return new LoadData<>(new ObjectKey(model), factory.build(model));
   }
 

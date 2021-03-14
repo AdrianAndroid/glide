@@ -6,6 +6,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.signature.ObjectKey;
+import test.L;
 
 /**
  * A put of helper classes that performs no loading and instead always returns the given model as
@@ -52,6 +53,7 @@ public class UnitModelLoader<Model> implements ModelLoader<Model, Model> {
     @Override
     public void loadData(
         @NonNull Priority priority, @NonNull DataCallback<? super Model> callback) {
+      L.m3();
       callback.onDataReady(resource);
     }
 

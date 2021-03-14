@@ -30,6 +30,7 @@ import com.bumptech.glide.util.Util;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import test.L;
 
 class GifFrameLoader {
   private final GifDecoder gifDecoder;
@@ -331,6 +332,7 @@ class GifFrameLoader {
     @Override
     public void onResourceReady(
         @NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+      L.m3();
       this.resource = resource;
       Message msg = handler.obtainMessage(FrameLoaderCallback.MSG_DELAY, this);
       handler.sendMessageAtTime(msg, targetTime);

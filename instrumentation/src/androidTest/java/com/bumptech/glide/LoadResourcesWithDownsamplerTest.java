@@ -36,6 +36,7 @@ import java.util.Locale;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import test.L;
 
 /**
  * On API 26, decoding a variety of different images can cause {@link BitmapFactory} with {@link
@@ -249,6 +250,7 @@ public class LoadResourcesWithDownsamplerTest {
       @Override
       public void loadData(
           @NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
+        L.m3();
         inputStream = getInputStreamForResource(context, resourceId);
         callback.onDataReady(inputStream);
       }

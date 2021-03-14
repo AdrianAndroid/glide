@@ -9,6 +9,7 @@ import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoader.LoadData;
 import java.io.File;
 import java.util.List;
+import test.L;
 
 /**
  * Generates {@link com.bumptech.glide.load.data.DataFetcher DataFetchers} from cache files
@@ -41,6 +42,7 @@ class ResourceCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCa
   @SuppressWarnings("PMD.CollapsibleIfStatements")
   @Override
   public boolean startNext() {
+    L.m3();
     List<Key> sourceIds = helper.getCacheKeys();
     if (sourceIds.isEmpty()) {
       return false;
@@ -120,6 +122,7 @@ class ResourceCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCa
 
   @Override
   public void onDataReady(Object data) {
+    L.m3();
     cb.onDataFetcherReady(
         sourceKey, data, loadData.fetcher, DataSource.RESOURCE_DISK_CACHE, currentKey);
   }
@@ -127,5 +130,11 @@ class ResourceCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCa
   @Override
   public void onLoadFailed(@NonNull Exception e) {
     cb.onDataFetcherFailed(currentKey, e, loadData.fetcher, DataSource.RESOURCE_DISK_CACHE);
+  }
+
+
+  @Override
+  public String toString() {
+    return "ResourceCacheGenerator{}";
   }
 }

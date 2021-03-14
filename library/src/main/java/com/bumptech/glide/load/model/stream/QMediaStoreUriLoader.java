@@ -25,6 +25,7 @@ import com.bumptech.glide.util.Synthetic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import test.L;
 
 /**
  * Best effort attempt to work around various Q storage states and bugs.
@@ -127,6 +128,7 @@ public final class QMediaStoreUriLoader<DataT> implements ModelLoader<Uri, DataT
     @Override
     public void loadData(
         @NonNull Priority priority, @NonNull DataCallback<? super DataT> callback) {
+      L.m3();
       try {
         DataFetcher<DataT> local = buildDelegateFetcher();
         if (local == null) {

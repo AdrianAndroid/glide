@@ -8,6 +8,7 @@ import com.bumptech.glide.util.Preconditions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import test.L;
 
 /**
  * For a given {@link com.bumptech.glide.load.data.DataFetcher} for a given data class, attempts to
@@ -52,6 +53,7 @@ public class LoadPath<Data, ResourceType, Transcode> {
       int height,
       DecodePath.DecodeCallback<ResourceType> decodeCallback)
       throws GlideException {
+    L.m3();
     List<Throwable> throwables = Preconditions.checkNotNull(listPool.acquire());
     try {
       return loadWithExceptionList(rewinder, options, width, height, decodeCallback, throwables);
@@ -68,11 +70,14 @@ public class LoadPath<Data, ResourceType, Transcode> {
       DecodePath.DecodeCallback<ResourceType> decodeCallback,
       List<Throwable> exceptions)
       throws GlideException {
+    L.m3();
     Resource<Transcode> result = null;
     //noinspection ForLoopReplaceableByForEach to improve perf
+    //遍历内部存储的 DecodePath 集合，通过他们来解析数据
     for (int i = 0, size = decodePaths.size(); i < size; i++) {
       DecodePath<Data, ResourceType, Transcode> path = decodePaths.get(i);
       try {
+        //这里才是真正解析数据的地方
         result = path.decode(rewinder, width, height, options, decodeCallback);
       } catch (GlideException e) {
         exceptions.add(e);

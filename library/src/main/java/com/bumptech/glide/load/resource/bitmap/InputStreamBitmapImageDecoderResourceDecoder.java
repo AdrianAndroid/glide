@@ -13,6 +13,7 @@ import com.bumptech.glide.util.ByteBufferUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import test.L;
 
 /** {@link InputStream} specific implementation of {@link BitmapImageDecoderResourceDecoder}. */
 @RequiresApi(api = 28)
@@ -30,6 +31,7 @@ public final class InputStreamBitmapImageDecoderResourceDecoder
   public Resource<Bitmap> decode(
       @NonNull InputStream stream, int width, int height, @NonNull Options options)
       throws IOException {
+    L.m3();
     ByteBuffer buffer = ByteBufferUtil.fromStream(stream);
     Source source = ImageDecoder.createSource(buffer);
     return wrapped.decode(source, width, height, options);

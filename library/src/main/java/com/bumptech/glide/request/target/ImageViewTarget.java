@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.request.transition.Transition;
+import test.L;
 
 /**
  * A base {@link com.bumptech.glide.request.target.Target} for displaying resources in {@link
@@ -97,6 +98,7 @@ public abstract class ImageViewTarget<Z> extends ViewTarget<ImageView, Z>
 
   @Override
   public void onResourceReady(@NonNull Z resource, @Nullable Transition<? super Z> transition) {
+    L.m3();
     if (transition == null || !transition.transition(resource, this)) {
       setResourceInternal(resource);
     } else {
@@ -121,7 +123,7 @@ public abstract class ImageViewTarget<Z> extends ViewTarget<ImageView, Z>
   private void setResourceInternal(@Nullable Z resource) {
     // Order matters here. Set the resource first to make sure that the Drawable has a valid and
     // non-null Callback before starting it.
-    setResource(resource);
+    setResource(resource);//调用 setResource 函数，将资源显示出来
     maybeUpdateAnimatable(resource);
   }
 

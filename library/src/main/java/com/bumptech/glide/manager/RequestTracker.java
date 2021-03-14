@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
+import test.L;
 
 /**
  * A class for tracking, canceling, and restarting in progress, completed, and failed requests.
@@ -38,10 +39,15 @@ public class RequestTracker {
 
   /** Starts tracking the given request. */
   public void runRequest(@NonNull Request request) {
+    L.m3();
+    // 请求一个请求
     requests.add(request);
+    //是否暂停
     if (!isPaused) {
+      // 没有暂停，开始调用request begin执行
       request.begin();
     } else {
+      // 如果调用了 暂停，清理请求
       request.clear();
       if (Log.isLoggable(TAG, Log.VERBOSE)) {
         Log.v(TAG, "Paused, delaying request");

@@ -10,6 +10,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import test.L;
 
 /**
  * A simple model loader for loading data from a Data URL String.
@@ -40,6 +41,7 @@ public final class DataUrlLoader<Model, Data> implements ModelLoader<Model, Data
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull Model model, int width, int height, @NonNull Options options) {
+    L.m3();
     return new LoadData<>(
         new ObjectKey(model), new DataUriFetcher<>(model.toString(), dataDecoder));
   }
@@ -78,6 +80,7 @@ public final class DataUrlLoader<Model, Data> implements ModelLoader<Model, Data
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super Data> callback) {
+      L.m3();
       try {
         data = reader.decode(dataUri);
         callback.onDataReady(data);

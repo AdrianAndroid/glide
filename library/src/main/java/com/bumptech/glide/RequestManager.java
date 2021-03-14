@@ -43,6 +43,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import test.L;
 
 /**
  * A class for managing and starting requests for Glide. Can use activity, fragment and connectivity
@@ -461,6 +462,7 @@ public class RequestManager
   @CheckResult
   @Override
   public RequestBuilder<Drawable> load(@Nullable String string) {
+    //这里调用Drawable图片加载请求器为其加载
     return asDrawable().load(string);
   }
 
@@ -670,7 +672,10 @@ public class RequestManager
   }
 
   synchronized void track(@NonNull Target<?> target, @NonNull Request request) {
+    L.m3();
+    //添加一个目标任务
     targetTracker.track(target);
+    // 执行glide request
     requestTracker.runRequest(request);
   }
 
@@ -745,6 +750,7 @@ public class RequestManager
     @Override
     public void onResourceReady(
         @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+      L.m3();
       // Do nothing.
     }
   }

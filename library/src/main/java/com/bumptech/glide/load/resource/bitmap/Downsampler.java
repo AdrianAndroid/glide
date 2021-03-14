@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import test.L;
 
 /**
  * Downsamples, decodes, and rotates images according to their exif orientation using {@link
@@ -174,6 +175,7 @@ public final class Downsampler {
    */
   public Resource<Bitmap> decode(InputStream is, int outWidth, int outHeight, Options options)
       throws IOException {
+    L.m3();
     return decode(is, outWidth, outHeight, options, EMPTY_CALLBACKS);
   }
 
@@ -204,6 +206,7 @@ public final class Downsampler {
       Options options,
       DecodeCallbacks callbacks)
       throws IOException {
+    L.m3();
     return decode(
         new ImageReader.InputStreamImageReader(is, parsers, byteArrayPool),
         requestedWidth,
@@ -216,6 +219,7 @@ public final class Downsampler {
   public Resource<Bitmap> decode(
       ParcelFileDescriptor parcelFileDescriptor, int outWidth, int outHeight, Options options)
       throws IOException {
+    L.m3();
     return decode(
         new ImageReader.ParcelFileDescriptorImageReader(
             parcelFileDescriptor, parsers, byteArrayPool),
@@ -232,6 +236,7 @@ public final class Downsampler {
       Options options,
       DecodeCallbacks callbacks)
       throws IOException {
+    L.m3();
     byte[] bytesForOptions = byteArrayPool.get(ArrayPool.STANDARD_BUFFER_SIZE_BYTES, byte[].class);
     BitmapFactory.Options bitmapFactoryOptions = getDefaultOptions();
     bitmapFactoryOptions.inTempStorage = bytesForOptions;

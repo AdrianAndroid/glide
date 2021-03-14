@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.load.Options;
 import java.io.InputStream;
+import test.L;
 
 /**
  * A model loader for handling Android resource files. Model must be an Android resource id in the
@@ -32,6 +33,7 @@ public class ResourceLoader<Data> implements ModelLoader<Integer, Data> {
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull Integer model, int width, int height, @NonNull Options options) {
+    L.m3();
     Uri uri = getResourceUri(model);
     return uri == null ? null : uriLoader.buildLoadData(uri, width, height, options);
   }

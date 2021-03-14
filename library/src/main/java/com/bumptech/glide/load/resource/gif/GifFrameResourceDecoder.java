@@ -8,6 +8,7 @@ import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import test.L;
 
 /**
  * Decodes {@link Bitmap}s from {@link GifDecoder}s representing a particular frame of a particular
@@ -28,6 +29,7 @@ public final class GifFrameResourceDecoder implements ResourceDecoder<GifDecoder
   @Override
   public Resource<Bitmap> decode(
       @NonNull GifDecoder source, int width, int height, @NonNull Options options) {
+    L.m3();
     Bitmap bitmap = source.getNextFrame();
     return BitmapResource.obtain(bitmap, bitmapPool);
   }

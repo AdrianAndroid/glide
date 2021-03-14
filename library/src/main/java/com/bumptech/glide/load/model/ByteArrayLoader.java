@@ -9,6 +9,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import test.L;
 
 /**
  * A base class to convert byte arrays to input streams so they can be decoded. This class is
@@ -28,6 +29,7 @@ public class ByteArrayLoader<Data> implements ModelLoader<byte[], Data> {
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull byte[] model, int width, int height, @NonNull Options options) {
+    L.m3();
     return new LoadData<>(new ObjectKey(model), new Fetcher<>(model, converter));
   }
 
@@ -64,6 +66,7 @@ public class ByteArrayLoader<Data> implements ModelLoader<byte[], Data> {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super Data> callback) {
+      L.m3();
       Data result = converter.convert(model);
       callback.onDataReady(result);
     }

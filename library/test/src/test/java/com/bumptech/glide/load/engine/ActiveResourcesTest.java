@@ -29,6 +29,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import test.L;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(shadows = GlideShadowLooper.class)
@@ -250,6 +251,7 @@ public class ActiveResourcesTest {
               new Executor() {
                 @Override
                 public void execute(@NonNull final Runnable command) {
+                  L.m3();
                   delegate.execute(
                       new Runnable() {
                         @Override
@@ -295,6 +297,7 @@ public class ActiveResourcesTest {
               new Executor() {
                 @Override
                 public void execute(@NonNull final Runnable command) {
+                  L.m3();
                   delegate.execute(
                       new Runnable() {
                         @Override

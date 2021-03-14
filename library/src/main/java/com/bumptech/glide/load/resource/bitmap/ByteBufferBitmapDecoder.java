@@ -9,6 +9,7 @@ import com.bumptech.glide.util.ByteBufferUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import test.L;
 
 /** Decodes {@link android.graphics.Bitmap Bitmaps} from {@link java.nio.ByteBuffer ByteBuffers}. */
 public class ByteBufferBitmapDecoder implements ResourceDecoder<ByteBuffer, Bitmap> {
@@ -27,6 +28,7 @@ public class ByteBufferBitmapDecoder implements ResourceDecoder<ByteBuffer, Bitm
   public Resource<Bitmap> decode(
       @NonNull ByteBuffer source, int width, int height, @NonNull Options options)
       throws IOException {
+    L.m3();
     InputStream is = ByteBufferUtil.toStream(source);
     return downsampler.decode(is, width, height, options);
   }

@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import test.L;
 
 /**
  * A simple model loader for loading data from {@link File}s.
@@ -34,6 +35,7 @@ public class FileLoader<Data> implements ModelLoader<File, Data> {
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull File model, int width, int height, @NonNull Options options) {
+    L.m3();
     return new LoadData<>(new ObjectKey(model), new FileFetcher<>(model, fileOpener));
   }
 
@@ -67,6 +69,7 @@ public class FileLoader<Data> implements ModelLoader<File, Data> {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super Data> callback) {
+      L.m3();
       try {
         data = opener.open(file);
       } catch (FileNotFoundException e) {

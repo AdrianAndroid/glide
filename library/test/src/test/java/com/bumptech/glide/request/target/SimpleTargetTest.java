@@ -8,6 +8,7 @@ import com.bumptech.glide.request.transition.Transition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import test.L;
 
 @RunWith(JUnit4.class)
 public class SimpleTargetTest {
@@ -38,6 +39,7 @@ public class SimpleTargetTest {
       @Override
       public void onResourceReady(
           @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+        L.m3();
         // Do nothing.
       }
     };
@@ -58,6 +60,7 @@ public class SimpleTargetTest {
       @Override
       public void onResourceReady(
           @NonNull Object resource, @Nullable Transition<? super Object> transition) {
+        L.m3();
         // Do nothing.
       }
     };

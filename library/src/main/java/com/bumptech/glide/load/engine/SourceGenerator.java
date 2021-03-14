@@ -13,6 +13,7 @@ import com.bumptech.glide.load.model.ModelLoader.LoadData;
 import com.bumptech.glide.util.LogTime;
 import com.bumptech.glide.util.Synthetic;
 import java.util.Collections;
+import test.L;
 
 /**
  * Generates {@link com.bumptech.glide.load.data.DataFetcher DataFetchers} from original source data
@@ -41,6 +42,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
 
   @Override
   public boolean startNext() {
+    L.m3();
     if (dataToCache != null) {
       Object data = dataToCache;
       dataToCache = null;
@@ -55,12 +57,13 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
     loadData = null;
     boolean started = false;
     while (!started && hasNextModelLoader()) {
+      //获取一个 ModelLoad 加载器
       loadData = helper.getLoadData().get(loadDataListIndex++);
       if (loadData != null
           && (helper.getDiskCacheStrategy().isDataCacheable(loadData.fetcher.getDataSource())
               || helper.hasLoadPath(loadData.fetcher.getDataClass()))) {
         started = true;
-        startNextLoad(loadData);
+        startNextLoad(loadData);//使用加载器中的 fetcher 根据优先级加载数据
       }
     }
     return started;
@@ -72,6 +75,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
         new DataCallback<Object>() {
           @Override
           public void onDataReady(@Nullable Object data) {
+            L.m3();
             if (isCurrentRequest(toStart)) {
               onDataReadyInternal(toStart, data);
             }
@@ -79,6 +83,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
 
           @Override
           public void onLoadFailed(@NonNull Exception e) {
+            L.m3();
             if (isCurrentRequest(toStart)) {
               onLoadFailedInternal(toStart, e);
             }
@@ -138,6 +143,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
   @SuppressWarnings("WeakerAccess")
   @Synthetic
   void onDataReadyInternal(LoadData<?> loadData, Object data) {
+    L.m3();
     DiskCacheStrategy diskCacheStrategy = helper.getDiskCacheStrategy();
     if (data != null && diskCacheStrategy.isDataCacheable(loadData.fetcher.getDataSource())) {
       dataToCache = data;
@@ -157,11 +163,13 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
   @SuppressWarnings("WeakerAccess")
   @Synthetic
   void onLoadFailedInternal(LoadData<?> loadData, @NonNull Exception e) {
+    L.m3();
     cb.onDataFetcherFailed(originalKey, e, loadData.fetcher, loadData.fetcher.getDataSource());
   }
 
   @Override
   public void reschedule() {
+    L.m3();
     // We don't expect this to happen, although if we ever need it to we can delegate to our
     // callback.
     throw new UnsupportedOperationException();
@@ -171,6 +179,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
   @Override
   public void onDataFetcherReady(
       Key sourceKey, Object data, DataFetcher<?> fetcher, DataSource dataSource, Key attemptedKey) {
+    L.m3();
     // This data fetcher will be loading from a File and provide the wrong data source, so override
     // with the data source of the original fetcher
     cb.onDataFetcherReady(sourceKey, data, fetcher, loadData.fetcher.getDataSource(), sourceKey);
@@ -179,6 +188,12 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
   @Override
   public void onDataFetcherFailed(
       Key sourceKey, Exception e, DataFetcher<?> fetcher, DataSource dataSource) {
+    L.m3();
     cb.onDataFetcherFailed(sourceKey, e, fetcher, loadData.fetcher.getDataSource());
+  }
+
+  @Override
+  public String toString() {
+    return "SourceGenerator{}";
   }
 }

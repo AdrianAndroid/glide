@@ -25,6 +25,7 @@ import com.bumptech.glide.util.pool.StateVerifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import test.L;
 
 /**
  * A class responsible for decoding resources either from cached data or from the original source
@@ -158,7 +159,7 @@ class DecodeJob<R>
    */
   private void onEncodeComplete() {
     if (releaseManager.onEncodeComplete()) {
-      releaseInternal();
+      releaseInternal();// 在 DecodeJob 的构建中, 我们知道这个 Callback 是 EngineJob
     }
   }
 
@@ -219,6 +220,7 @@ class DecodeJob<R>
   @SuppressWarnings("PMD.AvoidRethrowingException")
   @Override
   public void run() {
+    L.m3();
     // This should be much more fine grained, but since Java's thread pool implementation silently
     // swallows all otherwise fatal exceptions, this will at least make it obvious to developers
     // that something is failing.
@@ -227,10 +229,12 @@ class DecodeJob<R>
     // ensure that the fetcher is cleaned up either way.
     DataFetcher<?> localFetcher = currentFetcher;
     try {
+      // 是否取消了当前请求
       if (isCancelled) {
         notifyFailed();
         return;
       }
+      // 执行
       runWrapped();
     } catch (CallbackException e) {
       // If a callback not controlled by Glide throws an exception, we should avoid the Glide
@@ -269,10 +273,16 @@ class DecodeJob<R>
   }
 
   private void runWrapped() {
+    L.m3(runReason);
     switch (runReason) {
       case INITIALIZE:
+        // 获取资源状态
         stage = getNextStage(Stage.INITIALIZE);
+        L.m3(stage);
+        // 根据当前资源状态，获取资源执行器
         currentGenerator = getNextGenerator();
+        L.m3(currentGenerator);
+        // 执行
         runGenerators();
         break;
       case SWITCH_TO_SOURCE_SERVICE:
@@ -287,12 +297,13 @@ class DecodeJob<R>
   }
 
   private DataFetcherGenerator getNextGenerator() {
+    L.m3();
     switch (stage) {
-      case RESOURCE_CACHE:
+      case RESOURCE_CACHE: //从资源缓存执行器
         return new ResourceCacheGenerator(decodeHelper, this);
-      case DATA_CACHE:
+      case DATA_CACHE://源数据磁盘缓存执行器
         return new DataCacheGenerator(decodeHelper, this);
-      case SOURCE:
+      case SOURCE://什么都没有配置，源数据的执行器
         return new SourceGenerator(decodeHelper, this);
       case FINISHED:
         return null;
@@ -302,9 +313,12 @@ class DecodeJob<R>
   }
 
   private void runGenerators() {
+    L.m3();
     currentThread = Thread.currentThread();
     startFetchTime = LogTime.getLogTime();
     boolean isStarted = false;
+    //判断是否取消，是否开始
+    // 调用 DataFetcherGenerator.startNext() 判断是否是属于开始执行的任务
     while (!isCancelled
         && currentGenerator != null
         && !(isStarted = currentGenerator.startNext())) {
@@ -333,6 +347,7 @@ class DecodeJob<R>
   }
 
   private void notifyComplete(Resource<R> resource, DataSource dataSource) {
+    L.m3();
     setNotifiedOrThrow();
     callback.onResourceReady(resource, dataSource);
   }
@@ -347,17 +362,24 @@ class DecodeJob<R>
   }
 
   private Stage getNextStage(Stage current) {
+    L.m3(current);
     switch (current) {
       case INITIALIZE:
+        //如果外部调用配置了资源缓存策略，那么返回Staget.RESOURCE_CACHE
+        // 否则继续调用Stage.RESOURCE_CACHE执行。
         return diskCacheStrategy.decodeCachedResource()
             ? Stage.RESOURCE_CACHE
             : getNextStage(Stage.RESOURCE_CACHE);
       case RESOURCE_CACHE:
+        //如果外部配置了源数据缓存，那么返回 Stage.DATA_CACHE
+        // 否则继续调用 getNextStage(Stage.DATA_CACHE)
         return diskCacheStrategy.decodeCachedData()
             ? Stage.DATA_CACHE
             : getNextStage(Stage.DATA_CACHE);
       case DATA_CACHE:
         // Skip loading from source if the user opted to only retrieve the resource from cache.
+        //如果只能从缓存中获取数据，则直接返回 FINISHED，否则，返回SOURCE。
+        // 意思就是一个新的资源
         return onlyRetrieveFromCache ? Stage.FINISHED : Stage.SOURCE;
       case SOURCE:
       case FINISHED:
@@ -369,6 +391,7 @@ class DecodeJob<R>
 
   @Override
   public void reschedule() {
+    L.m3();
     runReason = RunReason.SWITCH_TO_SOURCE_SERVICE;
     callback.reschedule(this);
   }
@@ -376,10 +399,11 @@ class DecodeJob<R>
   @Override
   public void onDataFetcherReady(
       Key sourceKey, Object data, DataFetcher<?> fetcher, DataSource dataSource, Key attemptedKey) {
-    this.currentSourceKey = sourceKey;
-    this.currentData = data;
-    this.currentFetcher = fetcher;
-    this.currentDataSource = dataSource;
+    L.m3();
+    this.currentSourceKey = sourceKey; //当前返回数据的key
+    this.currentData = data; //返回的数据
+    this.currentFetcher = fetcher; //返回的数据执行器，这里可以理解为HttpUrlFetcher
+    this.currentDataSource = dataSource; //数据来源url
     this.currentAttemptingKey = attemptedKey;
     if (Thread.currentThread() != currentThread) {
       runReason = RunReason.DECODE_DATA;
@@ -387,6 +411,7 @@ class DecodeJob<R>
     } else {
       GlideTrace.beginSection("DecodeJob.decodeFromRetrievedData");
       try {
+        // 解析返回回来的数据
         decodeFromRetrievedData();
       } finally {
         GlideTrace.endSection();
@@ -410,6 +435,7 @@ class DecodeJob<R>
   }
 
   private void decodeFromRetrievedData() {
+    L.m3();
     if (Log.isLoggable(TAG, Log.VERBOSE)) {
       logWithTimeAndKey(
           "Retrieved data",
@@ -423,11 +449,13 @@ class DecodeJob<R>
     }
     Resource<R> resource = null;
     try {
+      // 调用 decodeFrom 解析 数据；HttpUrlFetcher , InputStream , currentDataSource
       resource = decodeFromData(currentFetcher, currentData, currentDataSource);
     } catch (GlideException e) {
       e.setLoggingDetails(currentAttemptingKey, currentDataSource);
       throwables.add(e);
     }
+    //解析完成后，通知下去
     if (resource != null) {
       notifyEncodeAndRelease(resource, currentDataSource);
     } else {
@@ -436,6 +464,7 @@ class DecodeJob<R>
   }
 
   private void notifyEncodeAndRelease(Resource<R> resource, DataSource dataSource) {
+    L.m3();
     if (resource instanceof Initializable) {
       ((Initializable) resource).initialize();
     }
@@ -446,11 +475,12 @@ class DecodeJob<R>
       lockedResource = LockedResource.obtain(resource);
       result = lockedResource;
     }
-
+//通知调用层数据已经装备好了
     notifyComplete(result, dataSource);
 
     stage = Stage.ENCODE;
     try {
+      //这里就是将资源磁盘缓存
       if (deferredEncodeManager.hasResourceToEncode()) {
         deferredEncodeManager.encode(diskCacheProvider, options);
       }
@@ -460,12 +490,13 @@ class DecodeJob<R>
       }
     }
     // Call onEncodeComplete outside the finally block so that it's not called if the encode process
-    // throws.
+    // throws.//完成
     onEncodeComplete();
   }
 
   private <Data> Resource<R> decodeFromData(
       DataFetcher<?> fetcher, Data data, DataSource dataSource) throws GlideException {
+    L.m3();
     try {
       if (data == null) {
         return null;
@@ -484,12 +515,14 @@ class DecodeJob<R>
   @SuppressWarnings("unchecked")
   private <Data> Resource<R> decodeFromFetcher(Data data, DataSource dataSource)
       throws GlideException {
+    L.m3();
     LoadPath<Data, ?, R> path = decodeHelper.getLoadPath((Class<Data>) data.getClass());
-    return runLoadPath(data, dataSource, path);
+    return runLoadPath(data, dataSource, path);//通过 LoadPath 解析器来解析数据
   }
 
   @NonNull
   private Options getOptionsWithHardwareConfig(DataSource dataSource) {
+    L.m3();
     Options options = this.options;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
       return options;
@@ -517,10 +550,13 @@ class DecodeJob<R>
   private <Data, ResourceType> Resource<R> runLoadPath(
       Data data, DataSource dataSource, LoadPath<Data, ResourceType, R> path)
       throws GlideException {
+    L.m3();
     Options options = getOptionsWithHardwareConfig(dataSource);
+    //因为这里返回的是一个 InputStream 所以 这里拿到的是 InputStreamRewinder
     DataRewinder<Data> rewinder = glideContext.getRegistry().getRewinder(data);
     try {
       // ResourceType in DecodeCallback below is required for compilation to work with gradle.
+      //将解析资源的任务转移到 Load.path方法中
       return path.load(
           rewinder, options, width, height, new DecodeCallback<ResourceType>(dataSource));
     } finally {
@@ -554,10 +590,13 @@ class DecodeJob<R>
   @Synthetic
   @NonNull
   <Z> Resource<Z> onResourceDecoded(DataSource dataSource, @NonNull Resource<Z> decoded) {
+    L.m3();
     @SuppressWarnings("unchecked")
+    //获取资源类型
     Class<Z> resourceSubClass = (Class<Z>) decoded.get().getClass();
     Transformation<Z> appliedTransformation = null;
     Resource<Z> transformed = decoded;
+    //如果不是从磁盘资源中获取需要进行 transform 操作
     if (dataSource != DataSource.RESOURCE_DISK_CACHE) {
       appliedTransformation = decodeHelper.getTransformation(resourceSubClass);
       transformed = appliedTransformation.transform(glideContext, decoded, width, height);
@@ -566,7 +605,7 @@ class DecodeJob<R>
     if (!decoded.equals(transformed)) {
       decoded.recycle();
     }
-
+    //构建数据编码的策略
     final EncodeStrategy encodeStrategy;
     final ResourceEncoder<Z> encoder;
     if (decodeHelper.isResourceEncoderAvailable(transformed)) {
@@ -576,7 +615,7 @@ class DecodeJob<R>
       encoder = null;
       encodeStrategy = EncodeStrategy.NONE;
     }
-
+    //根据编码策略，构建缓存 Key
     Resource<Z> result = transformed;
     boolean isFromAlternateCacheKey = !decodeHelper.isSourceKey(currentSourceKey);
     if (diskCacheStrategy.isResourceCacheable(
@@ -587,6 +626,7 @@ class DecodeJob<R>
       final Key key;
       switch (encodeStrategy) {
         case SOURCE:
+          //源数据 key
           key = new DataCacheKey(currentSourceKey, signature);
           break;
         case TRANSFORMED:
@@ -604,11 +644,12 @@ class DecodeJob<R>
         default:
           throw new IllegalArgumentException("Unknown strategy: " + encodeStrategy);
       }
-
+      //初始化编码管理者，用于提交内存缓存
       LockedResource<Z> lockedResult = LockedResource.obtain(transformed);
       deferredEncodeManager.init(key, encoder, lockedResult);
       result = lockedResult;
     }
+    //返回转换后的 Bitmap
     return result;
   }
 
@@ -624,6 +665,7 @@ class DecodeJob<R>
     @NonNull
     @Override
     public Resource<Z> onResourceDecoded(@NonNull Resource<Z> decoded) {
+      L.m3();
       return DecodeJob.this.onResourceDecoded(dataSource, decoded);
     }
   }
@@ -748,5 +790,10 @@ class DecodeJob<R>
     ENCODE,
     /** No more viable stages. */
     FINISHED,
+  }
+
+  @Override
+  public String toString() {
+    return "DecodeJob{}";
   }
 }

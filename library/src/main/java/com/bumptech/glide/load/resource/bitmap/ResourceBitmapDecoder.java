@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.drawable.ResourceDrawableDecoder;
 import com.bumptech.glide.request.target.Target;
+import test.L;
 
 /**
  * Decodes {@link Bitmap}s from resource ids.
@@ -46,6 +47,7 @@ public class ResourceBitmapDecoder implements ResourceDecoder<Uri, Bitmap> {
   @Override
   public Resource<Bitmap> decode(
       @NonNull Uri source, int width, int height, @NonNull Options options) {
+    L.m3();
     Resource<Drawable> drawableResource = drawableDecoder.decode(source, width, height, options);
     if (drawableResource == null) {
       return null;

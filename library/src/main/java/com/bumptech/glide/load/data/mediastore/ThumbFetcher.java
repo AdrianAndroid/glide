@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.ArrayPool;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import test.L;
 
 /**
  * A {@link DataFetcher} implementation for {@link InputStream}s that loads data from thumbnail
@@ -57,6 +58,7 @@ public class ThumbFetcher implements DataFetcher<InputStream> {
   @Override
   public void loadData(
       @NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
+    L.m3();
     try {
       inputStream = openThumbInputStream();
     } catch (FileNotFoundException e) {

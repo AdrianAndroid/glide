@@ -16,6 +16,7 @@ import com.squareup.okhttp.ResponseBody;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import test.L;
 
 /**
  * Fetches an {@link InputStream} using the okhttp library.
@@ -46,6 +47,7 @@ public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
   @Override
   public void loadData(
       @NonNull Priority priority, @NonNull final DataCallback<? super InputStream> callback) {
+    L.m3();
     Request.Builder requestBuilder = new Request.Builder().url(url.toStringUrl());
     for (Map.Entry<String, String> headerEntry : url.getHeaders().entrySet()) {
       String key = headerEntry.getKey();

@@ -540,7 +540,7 @@ public final class GlideBuilder {
       diskCacheFactory = new InternalCacheDiskCacheFactory(context);
     }
 
-    if (engine == null) {
+    if (engine == null) { //加载缓存的
       engine =
           new Engine(
               memoryCache,

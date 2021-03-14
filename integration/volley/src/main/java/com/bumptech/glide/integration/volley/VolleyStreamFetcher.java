@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
+import test.L;
 
 /** A DataFetcher backed by volley for fetching images via http. */
 // Public API.
@@ -54,6 +55,7 @@ public class VolleyStreamFetcher implements DataFetcher<InputStream> {
   @Override
   public void loadData(
       @NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
+    L.m3();
     request =
         requestFactory.create(
             url.toStringUrl(), callback, glideToVolleyPriority(priority), url.getHeaders());

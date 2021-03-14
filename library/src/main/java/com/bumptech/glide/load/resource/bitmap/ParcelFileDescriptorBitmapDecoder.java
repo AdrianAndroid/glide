@@ -10,6 +10,7 @@ import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.Resource;
 import java.io.IOException;
+import test.L;
 
 /** Decodes {@link Bitmap}s from {@link ParcelFileDescriptor}s. */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -32,6 +33,7 @@ public final class ParcelFileDescriptorBitmapDecoder
   public Resource<Bitmap> decode(
       @NonNull ParcelFileDescriptor source, int width, int height, @NonNull Options options)
       throws IOException {
+    L.m3();
     return downsampler.decode(source, width, height, options);
   }
 }

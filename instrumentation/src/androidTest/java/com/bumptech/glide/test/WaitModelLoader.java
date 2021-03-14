@@ -14,6 +14,7 @@ import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 import com.bumptech.glide.test.WaitModelLoader.WaitModel;
 import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
+import test.L;
 
 /**
  * Allows callers to load an object but force the load to pause until {@link WaitModel#countDown()}
@@ -31,6 +32,7 @@ public final class WaitModelLoader<Model, Data> implements ModelLoader<WaitModel
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull WaitModel<Model> waitModel, int width, int height, @NonNull Options options) {
+    L.m3();
     LoadData<Data> wrappedLoadData =
         wrapped.buildLoadData(waitModel.wrapped, width, height, options);
     if (wrappedLoadData == null) {
@@ -107,6 +109,7 @@ public final class WaitModelLoader<Model, Data> implements ModelLoader<WaitModel
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super Data> callback) {
+      L.m3();
       ConcurrencyHelper.waitOnLatch(toWaitOn);
       wrapped.loadData(priority, callback);
     }

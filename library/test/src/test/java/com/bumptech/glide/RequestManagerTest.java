@@ -41,6 +41,7 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import test.L;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 18, shadows = GlideShadowLooper.class)
@@ -78,6 +79,7 @@ public class RequestManagerTest {
           @Override
           public void onResourceReady(
               @NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+            L.m3();
             // Empty.
           }
 

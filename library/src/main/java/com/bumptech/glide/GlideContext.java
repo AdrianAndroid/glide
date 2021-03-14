@@ -96,6 +96,7 @@ public class GlideContext extends ContextWrapper {
   @NonNull
   public <X> ViewTarget<ImageView, X> buildImageViewTarget(
       @NonNull ImageView imageView, @NonNull Class<X> transcodeClass) {
+    //调用工厂模式根据transcodeClass生成出一个对应的ImageViewTarget
     return imageViewTargetFactory.buildTarget(imageView, transcodeClass);
   }
 

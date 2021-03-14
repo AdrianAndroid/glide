@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import test.L;
 
 /**
  * Handles http/https Uris by delegating to the {@link ModelLoader} for {@link
@@ -29,6 +30,7 @@ public class UrlUriLoader<Data> implements ModelLoader<Uri, Data> {
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull Uri uri, int width, int height, @NonNull Options options) {
+    L.m3();
     GlideUrl glideUrl = new GlideUrl(uri.toString());
     return urlLoader.buildLoadData(glideUrl, width, height, options);
   }
