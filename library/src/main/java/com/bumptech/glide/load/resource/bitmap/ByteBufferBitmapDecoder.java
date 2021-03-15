@@ -28,7 +28,7 @@ public class ByteBufferBitmapDecoder implements ResourceDecoder<ByteBuffer, Bitm
   public Resource<Bitmap> decode(
       @NonNull ByteBuffer source, int width, int height, @NonNull Options options)
       throws IOException {
-    L.m3();
+    L.m3("ByteBuffer",width, height, options);
     InputStream is = ByteBufferUtil.toStream(source);
     return downsampler.decode(is, width, height, options);
   }

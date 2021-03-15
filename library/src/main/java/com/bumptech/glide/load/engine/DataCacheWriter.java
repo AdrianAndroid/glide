@@ -5,6 +5,7 @@ import com.bumptech.glide.load.Encoder;
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.engine.cache.DiskCache;
 import java.io.File;
+import test.L;
 
 /**
  * Writes original source data or downsampled/transformed resource data to cache using the provided
@@ -27,6 +28,7 @@ class DataCacheWriter<DataType> implements DiskCache.Writer {
 
   @Override
   public boolean write(@NonNull File file) {
+    L.m3();
     return encoder.encode(data, file, options);
   }
 }

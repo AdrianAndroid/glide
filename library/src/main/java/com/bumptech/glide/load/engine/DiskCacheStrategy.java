@@ -2,6 +2,7 @@ package com.bumptech.glide.load.engine;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.EncodeStrategy;
+import test.L;
 
 /** Set of available caching strategies for media. */
 public abstract class DiskCacheStrategy {
@@ -20,6 +21,7 @@ public abstract class DiskCacheStrategy {
         @Override
         public boolean isResourceCacheable(
             boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {
+          L.m3();
           return dataSource != DataSource.RESOURCE_DISK_CACHE
               && dataSource != DataSource.MEMORY_CACHE;
         }
@@ -45,7 +47,7 @@ public abstract class DiskCacheStrategy {
 
         @Override
         public boolean isResourceCacheable(
-            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {
+            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {L.m3();
           return false;
         }
 
@@ -70,7 +72,7 @@ public abstract class DiskCacheStrategy {
 
         @Override
         public boolean isResourceCacheable(
-            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {
+            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {L.m3();
           return false;
         }
 
@@ -95,7 +97,7 @@ public abstract class DiskCacheStrategy {
 
         @Override
         public boolean isResourceCacheable(
-            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {
+            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {L.m3();
           return dataSource != DataSource.RESOURCE_DISK_CACHE
               && dataSource != DataSource.MEMORY_CACHE;
         }
@@ -126,7 +128,7 @@ public abstract class DiskCacheStrategy {
 
         @Override
         public boolean isResourceCacheable(
-            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {
+            boolean isFromAlternateCacheKey, DataSource dataSource, EncodeStrategy encodeStrategy) {L.m3();
           return ((isFromAlternateCacheKey && dataSource == DataSource.DATA_DISK_CACHE)
                   || dataSource == DataSource.LOCAL)
               && encodeStrategy == EncodeStrategy.TRANSFORMED;

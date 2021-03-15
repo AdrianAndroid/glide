@@ -40,7 +40,7 @@ class MultiModelLoader<Model, Data> implements ModelLoader<Model, Data> {
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull Model model, int width, int height, @NonNull Options options) {
-    L.m3();
+    L.m3(model, width, height, options);
     Key sourceKey = null;
     int size = modelLoaders.size();
     List<DataFetcher<Data>> fetchers = new ArrayList<>(size);

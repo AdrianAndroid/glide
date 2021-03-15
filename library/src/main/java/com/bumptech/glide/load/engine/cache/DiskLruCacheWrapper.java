@@ -10,6 +10,7 @@ import com.bumptech.glide.disklrucache.DiskLruCache.Value;
 import com.bumptech.glide.load.Key;
 import java.io.File;
 import java.io.IOException;
+import test.L;
 
 /**
  * The default DiskCache implementation. There must be no more than one active instance for a given
@@ -43,6 +44,7 @@ public class DiskLruCacheWrapper implements DiskCache {
   @SuppressWarnings("deprecation")
   @Deprecated
   public static synchronized DiskCache get(File directory, long maxSize) {
+    L.m3();
     // TODO calling twice with different arguments makes it return the cache for the same
     // directory, it's public!
     if (wrapper == null) {
@@ -60,6 +62,7 @@ public class DiskLruCacheWrapper implements DiskCache {
    */
   @SuppressWarnings("deprecation")
   public static DiskCache create(File directory, long maxSize) {
+    L.m3();
     return new DiskLruCacheWrapper(directory, maxSize);
   }
 
@@ -68,12 +71,14 @@ public class DiskLruCacheWrapper implements DiskCache {
   // Deprecated public API.
   @SuppressWarnings({"WeakerAccess", "DeprecatedIsStillUsed"})
   protected DiskLruCacheWrapper(File directory, long maxSize) {
+    L.m3();
     this.directory = directory;
     this.maxSize = maxSize;
     this.safeKeyGenerator = new SafeKeyGenerator();
   }
 
   private synchronized DiskLruCache getDiskCache() throws IOException {
+    L.m3();
     if (diskLruCache == null) {
       diskLruCache = DiskLruCache.open(directory, APP_VERSION, VALUE_COUNT, maxSize);
     }
@@ -82,6 +87,7 @@ public class DiskLruCacheWrapper implements DiskCache {
 
   @Override
   public File get(Key key) {
+    L.m3();
     String safeKey = safeKeyGenerator.getSafeKey(key);
     if (Log.isLoggable(TAG, Log.VERBOSE)) {
       Log.v(TAG, "Get: Obtained: " + safeKey + " for for Key: " + key);
@@ -105,6 +111,7 @@ public class DiskLruCacheWrapper implements DiskCache {
 
   @Override
   public void put(Key key, Writer writer) {
+    L.m3();
     // We want to make sure that puts block so that data is available when put completes. We may
     // actually not write any data if we find that data is written by the time we acquire the lock.
     String safeKey = safeKeyGenerator.getSafeKey(key);
@@ -146,6 +153,7 @@ public class DiskLruCacheWrapper implements DiskCache {
 
   @Override
   public void delete(Key key) {
+    L.m3();
     String safeKey = safeKeyGenerator.getSafeKey(key);
     try {
       getDiskCache().remove(safeKey);
@@ -158,6 +166,7 @@ public class DiskLruCacheWrapper implements DiskCache {
 
   @Override
   public synchronized void clear() {
+    L.m3();
     try {
       getDiskCache().delete();
     } catch (IOException e) {

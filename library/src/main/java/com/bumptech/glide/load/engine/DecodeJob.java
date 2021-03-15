@@ -590,7 +590,7 @@ class DecodeJob<R>
   @Synthetic
   @NonNull
   <Z> Resource<Z> onResourceDecoded(DataSource dataSource, @NonNull Resource<Z> decoded) {
-    L.m3();
+    L.m3("DataSource dataSource, @NonNull Resource<Z> decoded");
     @SuppressWarnings("unchecked")
     //获取资源类型
     Class<Z> resourceSubClass = (Class<Z>) decoded.get().getClass();
@@ -665,7 +665,7 @@ class DecodeJob<R>
     @NonNull
     @Override
     public Resource<Z> onResourceDecoded(@NonNull Resource<Z> decoded) {
-      L.m3();
+      L.m3("Resource<Z> ");
       return DecodeJob.this.onResourceDecoded(dataSource, decoded);
     }
   }
@@ -728,6 +728,7 @@ class DecodeJob<R>
     }
 
     void encode(DiskCacheProvider diskCacheProvider, Options options) {
+      L.m3();
       GlideTrace.beginSection("DecodeJob.encode");
       try {
         diskCacheProvider

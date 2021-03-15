@@ -57,7 +57,7 @@ public class DecodePath<DataType, ResourceType, Transcode> {
       @NonNull Options options,
       DecodeCallback<ResourceType> callback)
       throws GlideException {
-    L.m3();
+    L.m3("DataRewinder<DataType>", width, height, options);
     //调用 decodeResourec 将数据解析成中间资源
     Resource<ResourceType> decoded = decodeResource(rewinder, width, height, options);
     //解析完数据回调出去
@@ -70,7 +70,7 @@ public class DecodePath<DataType, ResourceType, Transcode> {
   private Resource<ResourceType> decodeResource(
       DataRewinder<DataType> rewinder, int width, int height, @NonNull Options options)
       throws GlideException {
-    L.m3();
+    L.m3("DataRewinder<DataType> ", width, height, options);
     List<Throwable> exceptions = Preconditions.checkNotNull(listPool.acquire());
     try {
       return decodeResourceWithList(rewinder, width, height, options, exceptions);
@@ -87,7 +87,7 @@ public class DecodePath<DataType, ResourceType, Transcode> {
       @NonNull Options options,
       List<Throwable> exceptions)
       throws GlideException {
-    L.m3();
+    L.m3("DataRewinder<DataType>", width, height, options);
     Resource<ResourceType> result = null;
     //noinspection ForLoopReplaceableByForEach to improve perf
     for (int i = 0, size = decoders.size(); i < size; i++) {

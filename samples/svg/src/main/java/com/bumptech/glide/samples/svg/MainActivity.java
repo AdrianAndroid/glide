@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.ViewTarget;
 import java.io.File;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -27,6 +28,7 @@ public class MainActivity extends Activity {
   String url = "https://desk-fd.zol-img.com.cn/t_s1920x1200c5/g5/M00/01/0E/ChMkJlbKwbSIQ7HWAAOU6-MaglcAALGcgI0Vu4AA5UD828.jpg";
   String url2 = "https://desk-fd.zol-img.com.cn/t_s1920x1200c5/g5/M00/01/0E/error.jpg";
   String url3 = "https://desk-fd.zol-img.com.cn/t_s4096x2160c5/g6/M00/0F/00/ChMkKWBJejqIAW7OAAfwdggCTlwAALOSgM1QwoAB_CO308.jpg";
+  String url4 = "https://desk-fd.zol-img.com.cn/t_s4096x2160c5/g6/M00/01/09/ChMkKl_NzaCIcwxxACKNvF7qXKQAAGYpwLH-UEAIo3U664.jpg";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class MainActivity extends Activity {
   public void dispalyOne(View view) {
     image1.setTag(12345);
     RequestManager requestManager = Glide.with(this);
-    RequestBuilder<Drawable> requestBuilder = requestManager.load(url3);
+    RequestBuilder<Drawable> requestBuilder = requestManager.load(url4);
     ViewTarget<ImageView, Drawable> into = requestBuilder.into(image1);
     Toast.makeText(this, "into", Toast.LENGTH_SHORT).show();
   }
@@ -104,13 +106,17 @@ public class MainActivity extends Activity {
         .into(image1);
   }
 
+  final ArrayList<Bitmap> array = new ArrayList<>();
+
   public void displyPreload(View view) {
     //File file = new File("/sdcard/DCIM/image (4).jpg");
     for (int i = 1; i < 37; i++) {
       File f = new File("/sdcard/DCIM/image (" + i + ").jpg");
       if (f.exists()) {
         //Glide.with(this).load(f).preload();
-        Glide.with(this).load(f).into(image1);
+        //Glide.with(this).load(f).into(image1);
+        Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
+        array.add(bitmap);
         Toast.makeText(this, f.getName(), Toast.LENGTH_SHORT).show();
       }
     }
@@ -192,5 +198,24 @@ public class MainActivity extends Activity {
     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.raw.world);
     image1.setImageBitmap(bitmap);
     Toast.makeText(this, "Display Bitmap World!", Toast.LENGTH_SHORT).show();
+  }
+
+  public void CleanDisk(View view) {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+
+        Glide.get(getApplicationContext()).clearDiskCache();
+      }
+    }).start();
+  }
+
+  public void CleanMemory(View view) {
+    Glide.get(getApplicationContext()).clearMemory();
+  }
+
+  public void displayWorld942(View view) {
+    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.raw.world_942);
+    image1.setImageBitmap(bitmap);
   }
 }

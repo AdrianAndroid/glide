@@ -29,7 +29,7 @@ public class StringLoader<Data> implements ModelLoader<String, Data> {
   @Override
   public LoadData<Data> buildLoadData(
       @NonNull String model, int width, int height, @NonNull Options options) {
-    L.m3();
+    L.m3(model, width, height, options);
     Uri uri = parseUri(model);
     if (uri == null || !uriLoader.handles(uri)) {
       return null;

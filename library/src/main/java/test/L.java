@@ -73,7 +73,7 @@ public class L {
   public static void printLogString(StackTraceElement stackTraceElement, String otherTag,
       Object... o) {
     StringBuilder sb = new StringBuilder();
-    sb.append(Thread.currentThread().getName());
+    sb.append("[[").append(Thread.currentThread().getName()).append("]]");
 
     String fileName = "L"; //防止为空
     if (stackTraceElement != null) {

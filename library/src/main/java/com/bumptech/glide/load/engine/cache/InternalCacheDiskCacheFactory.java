@@ -2,6 +2,7 @@ package com.bumptech.glide.load.engine.cache;
 
 import android.content.Context;
 import java.io.File;
+import test.L;
 
 /**
  * Creates an {@link com.bumptech.glide.disklrucache.DiskLruCache} based disk cache in the internal
@@ -16,6 +17,7 @@ public final class InternalCacheDiskCacheFactory extends DiskLruCacheFactory {
         context,
         DiskCache.Factory.DEFAULT_DISK_CACHE_DIR,
         DiskCache.Factory.DEFAULT_DISK_CACHE_SIZE);
+    L.m3();
   }
 
   public InternalCacheDiskCacheFactory(Context context, long diskCacheSize) {
@@ -39,5 +41,6 @@ public final class InternalCacheDiskCacheFactory extends DiskLruCacheFactory {
           }
         },
         diskCacheSize);
+    L.m3();
   }
 }

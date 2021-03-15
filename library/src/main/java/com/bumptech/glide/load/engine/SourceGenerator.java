@@ -104,6 +104,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
   }
 
   private void cacheData(Object dataToCache) {
+    L.m3();
     long startTime = LogTime.getLogTime();
     try {
       Encoder<Object> encoder = helper.getSourceEncoder(dataToCache);

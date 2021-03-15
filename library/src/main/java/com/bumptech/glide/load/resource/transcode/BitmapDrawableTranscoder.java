@@ -11,6 +11,7 @@ import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.LazyBitmapDrawableResource;
 import com.bumptech.glide.util.Preconditions;
+import test.L;
 
 /**
  * An {@link com.bumptech.glide.load.resource.transcode.ResourceTranscoder} that converts {@link
@@ -40,6 +41,7 @@ public class BitmapDrawableTranscoder implements ResourceTranscoder<Bitmap, Bitm
   @Override
   public Resource<BitmapDrawable> transcode(
       @NonNull Resource<Bitmap> toTranscode, @NonNull Options options) {
+    L.m3("Resource<Bitmap> toTranscode, @NonNull Options options)");
     return LazyBitmapDrawableResource.obtain(resources, toTranscode);
   }
 }

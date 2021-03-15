@@ -1,4 +1,4 @@
-//include ':test2'
+include ':javalib'//include ':test2'
 //include ':test1'
 exec {
     commandLine "git", "submodule", "update", "--init", "--recursive"

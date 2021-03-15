@@ -8,6 +8,7 @@ import com.bumptech.glide.load.resource.bytes.BytesResource;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.util.ByteBufferUtil;
 import java.nio.ByteBuffer;
+import test.L;
 
 /**
  * An {@link com.bumptech.glide.load.resource.transcode.ResourceTranscoder} that converts {@link
@@ -18,7 +19,7 @@ public class GifDrawableBytesTranscoder implements ResourceTranscoder<GifDrawabl
   @Nullable
   @Override
   public Resource<byte[]> transcode(
-      @NonNull Resource<GifDrawable> toTranscode, @NonNull Options options) {
+      @NonNull Resource<GifDrawable> toTranscode, @NonNull Options options) { L.m3();
     GifDrawable gifData = toTranscode.get();
     ByteBuffer byteBuffer = gifData.getBuffer();
     return new BytesResource(ByteBufferUtil.toBytes(byteBuffer));

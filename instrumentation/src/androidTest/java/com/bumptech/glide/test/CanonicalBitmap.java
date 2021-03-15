@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.test.InstrumentationRegistry;
 import com.bumptech.glide.util.Preconditions;
+import test.L;
 
 public final class CanonicalBitmap {
   @Nullable private Bitmap bitmap;
@@ -35,6 +36,7 @@ public final class CanonicalBitmap {
   }
 
   private Bitmap decodeBitmap() {
+    L.m3();
     Context context = InstrumentationRegistry.getTargetContext();
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inScaled = false;

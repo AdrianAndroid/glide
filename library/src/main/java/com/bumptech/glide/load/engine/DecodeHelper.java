@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import test.L;
 
 final class DecodeHelper<Transcode> {
 
@@ -151,6 +152,7 @@ final class DecodeHelper<Transcode> {
 
   @SuppressWarnings("unchecked")
   <Z> Transformation<Z> getTransformation(Class<Z> resourceClass) {
+    L.m3();
     Transformation<Z> result = (Transformation<Z>) transformations.get(resourceClass);
     if (result == null) {
       for (Entry<Class<?>, Transformation<?>> entry : transformations.entrySet()) {
@@ -179,7 +181,7 @@ final class DecodeHelper<Transcode> {
     return glideContext.getRegistry().isResourceEncoderAvailable(resource);
   }
 
-  <Z> ResourceEncoder<Z> getResultEncoder(Resource<Z> resource) {
+  <Z> ResourceEncoder<Z> getResultEncoder(Resource<Z> resource) {L.m3();
     return glideContext.getRegistry().getResultEncoder(resource);
   }
 

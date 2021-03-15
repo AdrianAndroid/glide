@@ -11,6 +11,7 @@ import com.bumptech.glide.load.engine.Initializable;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.util.Preconditions;
+import test.L;
 
 /**
  * Lazily allocates a {@link android.graphics.drawable.BitmapDrawable} from a given {@link
@@ -47,6 +48,7 @@ public final class LazyBitmapDrawableResource implements Resource<BitmapDrawable
   @Nullable
   public static Resource<BitmapDrawable> obtain(
       @NonNull Resources resources, @Nullable Resource<Bitmap> bitmapResource) {
+    L.m3("Resources resources, @Nullable Resource<Bitmap> bitmapResource)");
     if (bitmapResource == null) {
       return null;
     }
@@ -55,6 +57,7 @@ public final class LazyBitmapDrawableResource implements Resource<BitmapDrawable
 
   private LazyBitmapDrawableResource(
       @NonNull Resources resources, @NonNull Resource<Bitmap> bitmapResource) {
+    L.m3();
     this.resources = Preconditions.checkNotNull(resources);
     this.bitmapResource = Preconditions.checkNotNull(bitmapResource);
   }
@@ -69,6 +72,7 @@ public final class LazyBitmapDrawableResource implements Resource<BitmapDrawable
   @NonNull
   @Override
   public BitmapDrawable get() {
+    L.m3();
     return new BitmapDrawable(resources, bitmapResource.get());
   }
 

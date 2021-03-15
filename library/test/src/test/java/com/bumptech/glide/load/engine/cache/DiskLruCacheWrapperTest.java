@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import test.L;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 18)
@@ -68,6 +69,7 @@ public class DiskLruCacheWrapperTest {
         new DiskCache.Writer() {
           @Override
           public boolean write(@NonNull File file) {
+            L.m3();
             try {
               Util.writeFile(file, data);
             } catch (IOException e) {
@@ -89,6 +91,7 @@ public class DiskLruCacheWrapperTest {
         new DiskCache.Writer() {
           @Override
           public boolean write(@NonNull File file) {
+            L.m3();
             return false;
           }
         });
@@ -103,6 +106,7 @@ public class DiskLruCacheWrapperTest {
         new DiskCache.Writer() {
           @Override
           public boolean write(@NonNull File file) {
+            L.m3();
             try {
               Util.writeFile(file, data);
             } catch (IOException e) {
@@ -123,6 +127,7 @@ public class DiskLruCacheWrapperTest {
           new DiskCache.Writer() {
             @Override
             public boolean write(@NonNull File file) {
+              L.m3();
               throw new RuntimeException("test");
             }
           });
@@ -135,6 +140,7 @@ public class DiskLruCacheWrapperTest {
         new DiskCache.Writer() {
           @Override
           public boolean write(@NonNull File file) {
+            L.m3();
             try {
               Util.writeFile(file, data);
             } catch (IOException e) {

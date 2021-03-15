@@ -175,7 +175,7 @@ public final class Downsampler {
    */
   public Resource<Bitmap> decode(InputStream is, int outWidth, int outHeight, Options options)
       throws IOException {
-    L.m3();
+    L.m3("InputStream", outWidth, outHeight, options);
     return decode(is, outWidth, outHeight, options, EMPTY_CALLBACKS);
   }
 
@@ -206,7 +206,7 @@ public final class Downsampler {
       Options options,
       DecodeCallbacks callbacks)
       throws IOException {
-    L.m3();
+    L.m3("InputStream",requestedWidth, requestedHeight, options);
     return decode(
         new ImageReader.InputStreamImageReader(is, parsers, byteArrayPool),
         requestedWidth,
@@ -236,7 +236,7 @@ public final class Downsampler {
       Options options,
       DecodeCallbacks callbacks)
       throws IOException {
-    L.m3();
+    L.m3("ImageReader", requestedWidth, requestedHeight, options, callbacks);
     byte[] bytesForOptions = byteArrayPool.get(ArrayPool.STANDARD_BUFFER_SIZE_BYTES, byte[].class);
     BitmapFactory.Options bitmapFactoryOptions = getDefaultOptions();
     bitmapFactoryOptions.inTempStorage = bytesForOptions;
@@ -281,7 +281,7 @@ public final class Downsampler {
       DecodeCallbacks callbacks)
       throws IOException {
     long startTime = LogTime.getLogTime();
-
+    L.m3();
     int[] sourceDimensions = getDimensions(imageReader, options, callbacks, bitmapPool);
     int sourceWidth = sourceDimensions[0];
     int sourceHeight = sourceDimensions[1];
@@ -434,7 +434,7 @@ public final class Downsampler {
       int targetWidth,
       int targetHeight,
       BitmapFactory.Options options)
-      throws IOException {
+      throws IOException {L.m3();
     // We can't downsample source content if we can't determine its dimensions.
     if (sourceWidth <= 0 || sourceHeight <= 0) {
       if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -725,7 +725,7 @@ public final class Downsampler {
       BitmapFactory.Options options,
       DecodeCallbacks callbacks,
       BitmapPool bitmapPool)
-      throws IOException {
+      throws IOException { L.m3();
     if (!options.inJustDecodeBounds) {
       // Once we've read the image header, we no longer need to allow the buffer to expand in
       // size. To avoid unnecessary allocations reading image data, we fix the mark limit so that it

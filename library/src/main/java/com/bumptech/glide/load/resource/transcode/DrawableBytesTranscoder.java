@@ -10,6 +10,7 @@ import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
+import test.L;
 
 /**
  * Obtains {@code byte[]} from {@link BitmapDrawable}s by delegating to a {@link ResourceTranscoder}
@@ -32,7 +33,7 @@ public final class DrawableBytesTranscoder implements ResourceTranscoder<Drawabl
   @Nullable
   @Override
   public Resource<byte[]> transcode(
-      @NonNull Resource<Drawable> toTranscode, @NonNull Options options) {
+      @NonNull Resource<Drawable> toTranscode, @NonNull Options options) { L.m3();
     Drawable drawable = toTranscode.get();
     if (drawable instanceof BitmapDrawable) {
       return bitmapBytesTranscoder.transcode(

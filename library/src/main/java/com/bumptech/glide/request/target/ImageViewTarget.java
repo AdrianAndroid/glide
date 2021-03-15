@@ -51,6 +51,7 @@ public abstract class ImageViewTarget<Z> extends ViewTarget<ImageView, Z>
    */
   @Override
   public void setDrawable(Drawable drawable) {
+    L.m3("drawable=",drawable);
     view.setImageDrawable(drawable);
   }
 
@@ -63,6 +64,7 @@ public abstract class ImageViewTarget<Z> extends ViewTarget<ImageView, Z>
   @Override
   public void onLoadStarted(@Nullable Drawable placeholder) {
     super.onLoadStarted(placeholder);
+    L.m3("placeholder=",placeholder);
     setResourceInternal(null);
     setDrawable(placeholder);
   }
@@ -121,6 +123,7 @@ public abstract class ImageViewTarget<Z> extends ViewTarget<ImageView, Z>
   }
 
   private void setResourceInternal(@Nullable Z resource) {
+    L.m3();
     // Order matters here. Set the resource first to make sure that the Drawable has a valid and
     // non-null Callback before starting it.
     setResource(resource);//调用 setResource 函数，将资源显示出来

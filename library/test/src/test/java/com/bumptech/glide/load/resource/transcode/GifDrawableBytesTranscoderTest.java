@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import test.L;
 
 @RunWith(JUnit4.class)
 public class GifDrawableBytesTranscoderTest {
@@ -30,7 +31,7 @@ public class GifDrawableBytesTranscoderTest {
   }
 
   @Test
-  public void testReturnsBytesOfGivenGifDrawable() {
+  public void testReturnsBytesOfGivenGifDrawable() { L.m3();
     for (String fakeData : new String[] {"test", "1235asfklaw3", "@$@#"}) {
       ByteBuffer expected = ByteBuffer.wrap(fakeData.getBytes(Charset.defaultCharset()));
       when(gifDrawable.getBuffer()).thenReturn(expected);

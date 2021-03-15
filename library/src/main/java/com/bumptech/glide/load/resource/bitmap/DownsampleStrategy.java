@@ -3,6 +3,7 @@ package com.bumptech.glide.load.resource.bitmap;
 import android.os.Build;
 import com.bumptech.glide.load.Option;
 import com.bumptech.glide.util.Synthetic;
+import test.L;
 
 /**
  * Indicates the algorithm to use when downsampling images.
@@ -159,6 +160,7 @@ public abstract class DownsampleStrategy {
     @Override
     public SampleSizeRounding getSampleSizeRounding(
         int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
+      L.m3();
       if (IS_BITMAP_FACTORY_SCALING_SUPPORTED) {
         return SampleSizeRounding.QUALITY;
       } else {
@@ -185,7 +187,7 @@ public abstract class DownsampleStrategy {
 
     @Override
     public SampleSizeRounding getSampleSizeRounding(
-        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
+        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {L.m3();
       return SampleSizeRounding.QUALITY;
     }
   }
@@ -204,7 +206,7 @@ public abstract class DownsampleStrategy {
 
     @Override
     public SampleSizeRounding getSampleSizeRounding(
-        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
+        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {L.m3();
       return SampleSizeRounding.QUALITY;
     }
   }
@@ -232,6 +234,7 @@ public abstract class DownsampleStrategy {
     @Override
     public SampleSizeRounding getSampleSizeRounding(
         int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
+      L.m3();
       return SampleSizeRounding.MEMORY;
     }
   }
@@ -249,7 +252,7 @@ public abstract class DownsampleStrategy {
 
     @Override
     public SampleSizeRounding getSampleSizeRounding(
-        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
+        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {L.m3();
       return SampleSizeRounding.QUALITY;
     }
   }
@@ -270,7 +273,7 @@ public abstract class DownsampleStrategy {
 
     @Override
     public SampleSizeRounding getSampleSizeRounding(
-        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
+        int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {L.m3();
       return getScaleFactor(sourceWidth, sourceHeight, requestedWidth, requestedHeight) == 1.f
           ? SampleSizeRounding.QUALITY
           : FIT_CENTER.getSampleSizeRounding(

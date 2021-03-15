@@ -16,6 +16,7 @@ import com.bumptech.glide.util.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import test.L;
 
 /**
  * This is a helper class for {@link Downsampler} that abstracts out image operations from the input
@@ -47,6 +48,7 @@ interface ImageReader {
     @Nullable
     @Override
     public Bitmap decodeBitmap(BitmapFactory.Options options) throws IOException {
+      L.m3();
       return BitmapFactory.decodeStream(dataRewinder.rewindAndGet(), null, options);
     }
 
@@ -85,7 +87,7 @@ interface ImageReader {
 
     @Nullable
     @Override
-    public Bitmap decodeBitmap(BitmapFactory.Options options) throws IOException {
+    public Bitmap decodeBitmap(BitmapFactory.Options options) throws IOException {L.m3();
       return BitmapFactory.decodeFileDescriptor(
           dataRewinder.rewindAndGet().getFileDescriptor(), null, options);
     }
